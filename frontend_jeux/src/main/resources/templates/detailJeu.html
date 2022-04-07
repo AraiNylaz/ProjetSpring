@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html html="" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Games</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+    <div th:if="${userDTO==null}" class="w3-bar w3-black w3-card">
+        <a href="http://localhost:9007/jeux" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Back to Games</a>
+        <a href="http://localhost:9009/login" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Sign In</a>
+        <a href="http://localhost:9009/register" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Register</a>
+    </div>
+
+    <div th:if="${userDTO != null}" class="w3-bar w3-black w3-card">
+        <a href="http://localhost:9007/jeux" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Back to Games</a>
+        <a href="http://localhost:9010/paniers/home/" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Panier</a> <!-- {user} (user=${userDTO.getId()})} -->
+        <a href="http://localhost:9009/logout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Sign Out</a>
+    </div>
+</div>
+
+<!-- Page content -->
+<div class="w3-content" style="">
+
+    <!-- Game Details Section -->
+    <!-- <div class="w3-container w3-content w3-center w3-padding-64" th:if="${game != null}" style="" id="game"> -->
+    <div class="w3-container w3-content w3-center w3-padding-64" th:if="${game == null}">
+        <div class="container mx-auto align-content-center text-center" style="margin: 10%">
+            <p>The game you're looking for is not there...</p>
+        </div>
+    </div>
+    <div th:else>
+        <br>
+        <br>
+        <br>
+        <h1 class="w3-wide" th:text="${game.getName()}"></h1>
+        <h2 class="w3-wide" th:text="${game.getDetailed_description()}"></h2>
+        <h3 class="w3-wide" th:text="${game.getCategory()}"><i></i></h3>
+        <h3 class="w3-wide" th:text="${game.getPrice()} + ' €' "><b></b></h3>
+        <h3 class="w3-wide" th:text="${'moyenne : '+ rate}"></h3>
+        <h3 class="w3-wide" th:text="${'nombre de commentaires : '+ nbrComments}"></h3>
+
+        <div th:if="${userDTO!=null}" class="w3-row w3-padding-32" >
+                <a th:href="@{http://localhost:9010/paniers/{id} (id=${game.getId()})}">
+                    <button class="w3-btn w3-green">Add to my cart !</button>
+                </a>
+                <a th:href="@{/jeux/detail/{id}/addComment(id=${game.getId()})}">
+                    <button class="w3-btn w3-blue">ajouter un commentaire</button>
+                </a>
+                <!-- <input th:value="${email}" th:text="${email}"> TODO-->
+                <a th:action="@{/jeux/detail/{id}/only/{user}(id=${game.getId()}, user=${userDTO.getId()})}">
+                    <button class="w3-btn w3-blue" value="only " th:value="${buttonOnly}">Afficher vos commentaire</button>
+                </a>
+                <a th:action="@{/jeux/detail/{id}/except/{user}(id=${game.getId()}, user=${userDTO.getId()})}">
+                    <button class="w3-btn w3-blue" value="except" th:value="${buttonExcept}">Afficher tous les commentaire excepté les vôtres</button>
+                </a>
+        </div>
+    </div>
+    <div>
+        <div class="w3-container w3-content w3-center w3-padding-64" style="" id="comments">
+            <div class="w3-third" th:if="buttonExcept == 'except' "> <!-- TODO condition bouton cliqué avec input email  -->
+                <div class="w3-third" th:each="exceptComment : ${exceptUser}" >
+                    <div class="w3-third" th:if="${exceptComment.getEtat() == 'validé'}">
+                        <h5 th:text="${exceptComment.getTexte()}">comment</h5>
+                        <h5 th:if="${dateCreation != null}" th:date="${'date : ' + dateCreation}"> date</h5>
+                        <h5 th:if="${emailById != null}" th:date="${'user : ' + emailById}">user</h5>
+                        <p th:if="${exceptComment.getEvaluation() != 0}" th:text="${exceptComment.getEvaluation()}">rating</p>
+                        <a th:href="@{/jeux/detail/{id}/updateComment/{idComment}(id=${game.getId()}, idComment=${exceptComment.getIdComment()})}">
+                            <button class="w3-btn w3-blue">update le commentaire</button>
+                        </a>
+                        <a th:href="@{/jeux/detail/{id}/deleteComment/{idComment}(id=${game.getId()}, idComment=${exceptComment.getIdComment()})}">
+                            <button class="w3-btn w3-red">X</button>
+                        </a>
+                    </div>
+                </div>
+                <div th:if="${exceptUser.empty}">
+                    <h4>il n'y a pas de commentaires</h4>
+                </div>
+            </div>
+            <div class="w3-container w3-content w3-center w3-padding-64" th:if="buttonOnly == 'only' "> <!-- TODO condition bouton cliqué avec input email  -->
+                <div class="w3-third" th:each="onlyComment : ${onlyUser}" >
+                    <div class="w3-third" th:if="${onlyComment.getEtat() == 'validé'}">
+                        <h5 th:text="${onlyComment.getTexte()}">comment</h5>
+                        <h5 th:if="${dateCreation != null}" th:date="${'date : ' + dateCreation}"> date</h5>
+                        <h5 th:if="${emailById != null}" th:date="${'user : ' + emailById}">user</h5>
+                        <p th:if="${onlyComment.getEvaluation() != 0}" th:text="${onlyComment.getEvaluation()}">rating</p>
+                        <a th:href="@{/jeux/detail/{id}/updateComment/{idComment}(id=${game.getId()}, idComment=${onlyComment.getIdComment()})}">
+                            <button class="w3-btn w3-blue">update le commentaire</button>
+                        </a>
+                        <a th:href="@{/jeux/detail/{id}/deleteComment/{idComment}(id=${game.getId()}, idComment=${onlyComment.getIdComment()})}">
+                            <button class="w3-btn w3-red">X</button>
+                        </a>
+                    </div>
+                </div>
+                <div th:if="${onlyUser.empty}">
+                    <h4>il n'y a pas de commentaires pour l'utilisateur choisi</h4>
+                </div>
+            </div>
+            <div class="w3-container w3-content w3-center w3-padding-64" style="" th:else>
+                <div  th:each="comment : ${comments}" >
+                    <div  th:if="${comment.getEtat() == 'validé'}">
+                        <h5 th:text="${comment.getTexte()}">comment</h5>
+                        <h5 th:if="${dateCreation != null}" th:date="${'date : ' + dateCreation}"> date</h5>
+                        <h5 th:if="${emailById != null}" th:date="${'user : ' + emailById}">user</h5>
+                        <h5 th:if="${comment.getEvaluation() != 0}" th:text="${' rating : ' + comment.getEvaluation()}">rating</h5>
+                        <a th:href="@{/jeux/detail/{id}/updateComment/{idComment}(id=${game.getId()}, idComment=${comment.getIdComment()})}">
+                            <button class="w3-btn w3-blue">update le commentaire</button>
+                        </a>
+                        <a th:href="@{/jeux/detail/{id}/deleteComment/{idComment}(id=${game.getId()}, idComment=${comment.getIdComment()})}">
+                            <button class="w3-btn w3-red">X</button>
+                        </a>
+                    </div>
+                </div>
+                <div th:if="${comments.empty}">
+                    <h4>il n'y a pas de commentaires</h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- End Page Content -->
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
+    <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+
+</body>
+</html>

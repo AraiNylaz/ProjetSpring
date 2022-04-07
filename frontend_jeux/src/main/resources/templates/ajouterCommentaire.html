@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html html="" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Games</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+    <div th:if="${userDTO==null}" class="w3-bar w3-black w3-card">
+        <a href="http://localhost:9007/jeux" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Back to Games</a>
+        <a href="http://localhost:9009/login" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Sign In</a>
+        <a href="http://localhost:9009/register" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Register</a>
+    </div>
+
+    <div th:if="${userDTO != null}" class="w3-bar w3-black w3-card">
+        <a href="http://localhost:9007/jeux" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Back to Games</a>
+        <a href="http://localhost:9010/paniers/home/" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Panier</a>
+        <a href="http://localhost:9009/logout" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Sign Out</a>
+    </div>
+</div>
+
+<!-- Page content -->
+<div class="w3-container w3-content w3-center w3-padding-64" style="" id="addComment">
+    <br>
+    <br>
+    <br>
+    <h1>ajouter un commentaire</h1>
+    <form method="post" th:action="@{/jeux/detail/{id}/addComment(id=${jeu.getId()})}" th:object="${comment}">
+        <p><input type="number" placeholder="idGame" name="idGame" th:field="*{idComment}" hidden></p>
+        <p><input type="number" placeholder="idGame" name="idGame" th:field="*{jeu}" hidden></p>
+        <p><input type="text" placeholder="idUser" name="idUser" th:field="*{utilisateur}" hidden></p>
+        <p><input type="text" placeholder="text" name="text" th:field="*{texte}"></p>
+        <p><input type="date" placeholder="date" name="date" th:field="*{date_creation}" hidden></p>
+        <p><input type="number" min="1" max="5" placeholder="rate" name="rate" th:field="*{evaluation}"></p>
+        <select name="state" th:field="*{etat}">
+            <option value="validé">Validé</option>
+        </select>
+        <p><input class="w3-btn w3-blue" type="submit" value="ajouter un commentaire"></p>
+    </form>
+</div>
+
+<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
+    <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+
+</body>
+</html>

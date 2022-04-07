@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html html="" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en"><head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>Games</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head><body>
+
+<!-- Navbar -->
+<div class="w3-top">
+    <div class="w3-bar w3-black w3-card">
+        <a href="http://localhost:9007/jeux" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Back to Games</a>
+        <a th:href="@{/login}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">Sign In</a>
+        <a th:href="@{/register}" class="w3-bar-item w3-button w3-padding-large w3-hide-small" >Register</a>
+    </div>
+</div>
+
+<!-- Page content -->
+<div class="w3-content" style="">
+
+    <!-- Login Section -->
+    <div class="w3-black" id="create">
+        <div class="w3-container w3-content w3-padding-64" style="">
+            <h2 class="w3-wide w3-center">Sign up!</h2>
+
+            <form method="post" th:action="@{/login}" th:object="${user}">
+                <p class="w3-rest w3-row-padding" style=""><input type="text" style="" class="w3-padding" placeholder="Email" th:field="*{email}"></p>
+                <p class="w3-rest w3-row-padding" style=""><input type="password" style="" class="w3-padding" placeholder="Password" th:field="*{motDePasse}"></p>
+                <p class="w3-row-padding"><input class="w3-btn w3-black" type="submit" value="Sign up!"></p>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- End Page Content -->
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
+    <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+</footer>
+
+
+</body></html>
